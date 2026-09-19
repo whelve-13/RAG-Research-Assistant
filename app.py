@@ -9,11 +9,11 @@ st.title("📚 RAG Research & Paper Assistant")
 # Sidebar Configuration
 with st.sidebar:
     st.header("Configuration")
-    if "GROQ_API_KEY" in st.secrets:
-       groq_api_key = st.secrets["GROQ_API_KEY"]
-    else:
-       groq_api_key = st.sidebar.text_input("Enter Groq API Key", type="password")
-       uploaded_file = st.file_uploader("Upload a PDF (Research paper, textbook)", type=["pdf"])
+if "GROQ_API_KEY" in st.secrets:
+    groq_api_key = st.secrets["GROQ_API_KEY"]
+else:
+    groq_api_key = st.sidebar.text_input("Enter Groq API Key", type="password")
+    uploaded_file = st.file_uploader("Upload a PDF (Research paper, textbook)", type=["pdf"])
 
 # Session State Initialization
 if "chat_history" not in st.session_state:
