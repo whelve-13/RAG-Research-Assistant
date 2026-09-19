@@ -55,9 +55,17 @@ if user_query := st.chat_input("Ask a question about the uploaded document..."):
         st.session_state.messages.append({"role": "user", "content": user_query})
         with st.chat_message("user"):
             st.write(user_query)
-
+       
         with st.chat_message("assistant"):
             with st.spinner("Retrieving and generating answer..."):
-                response = st.session_state.rag_chain.invoke({"input": user_query})
-                st.write(response)
-                st.session_state.messages.append({"role": "assistant", "content": response})
+               raw_response = st.session_state.rag_chain.invoke({"input": user_query})
+        
+                  # Unpack the string whether the pipeline returns a dict or raw text
+                  if isinstance(raw_response, dict):
+                     answer_text = raw_response.get("answer", str(raw_response))
+                  else:
+                     answer_text = str(raw_response)
+
+                  st.markdown(answer_text)
+                  st.session_state.messages.append({"role": "assistant", "content": answer_text})
+        
