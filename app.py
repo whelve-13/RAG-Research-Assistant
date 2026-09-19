@@ -43,7 +43,7 @@ if uploaded_file and groq_api_key:
 # Display existing chat messages
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
-        st.write(msg["content"])
+        st.markdown(msg["content"])
 
 # User query input
 if user_query := st.chat_input("Ask a question about the uploaded document..."):
@@ -54,18 +54,18 @@ if user_query := st.chat_input("Ask a question about the uploaded document..."):
     else:
         st.session_state.messages.append({"role": "user", "content": user_query})
         with st.chat_message("user"):
-            st.write(user_query)
-       
+            st.markdown(user_query)
+
         with st.chat_message("assistant"):
             with st.spinner("Retrieving and generating answer..."):
-               raw_response = st.session_state.rag_chain.invoke({"input": user_query})
-        
-                  # Unpack the string whether the pipeline returns a dict or raw text
-                  if isinstance(raw_response, dict):
-                     answer_text = raw_response.get("answer", str(raw_response))
-                  else:
-                     answer_text = str(raw_response)
+                raw_response = st.session_state.rag_chain.invoke({"input": user_query})
+                
+                # Unpack raw response safely whether returned as dict or string
+                if isinstance(raw_response, dict):
+                    answer_text = raw_response.get("answer", str(raw_response))
+                else:
+                    answer_text = str(raw_response)
 
-                  st.markdown(answer_text)
-                  st.session_state.messages.append({"role": "assistant", "content": answer_text})
+                st.markdown(answer_text)
+                st.session_state.messages.append({"role": "assistant", "content": answer_text})
         
